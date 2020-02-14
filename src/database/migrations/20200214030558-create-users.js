@@ -23,7 +23,7 @@ module.exports = {
       provider: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
-        allowNull: false
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -32,15 +32,11 @@ module.exports = {
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-      }
-
+      },
     });
-
-
   },
 
-  down: (queryInterface, Sequelize) => {
-      return queryInterface.dropTable('users');
-
-  }
+  down: queryInterface => {
+    return queryInterface.dropTable('users');
+  },
 };
