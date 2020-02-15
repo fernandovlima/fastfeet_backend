@@ -27,6 +27,8 @@ routes.use(AuthMiddleware);
 routes.put('/users', UserController.update);
 // create recipient
 routes.post('/recipients', RecipientController.store);
+// update recipient
+routes.put('/recipients/:recipient_id', RecipientController.update);
 // upload files
 routes.post('/files', upload.single('file'), FileController.store);
 
