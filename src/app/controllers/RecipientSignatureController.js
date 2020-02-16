@@ -10,6 +10,12 @@ class RecipientSignatureController {
     const { originalname: name, filename: path } = req.file;
     const { recipient_id } = req.params;
 
+    const signatureExists = RecipientSignature.findByPk(recipient_id);
+
+    if (signatureExists) {
+      res.status(401).json({ error: 'Signature already exists' });
+    }
+
     const signature = await RecipientSignature.create({
       name,
       path,
