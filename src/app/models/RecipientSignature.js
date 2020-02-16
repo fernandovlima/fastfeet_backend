@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-class File extends Model {
+class RecipientSignature extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -12,6 +12,7 @@ class File extends Model {
             return `http:localhost:333/files/${this.path}`;
           },
         },
+        recipient_id: Sequelize.INTEGER,
       },
       {
         sequelize,
@@ -20,6 +21,10 @@ class File extends Model {
 
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.Recipient, { foreignKey: 'recipient_id' });
+  }
 }
 
-export default File;
+export default RecipientSignature;

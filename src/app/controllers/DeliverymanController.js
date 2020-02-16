@@ -88,7 +88,6 @@ class DeliverymanController {
     } catch (error) {
       return res.json(error);
     }
-    return res.json({ ok: 'true' });
   }
 }
 
