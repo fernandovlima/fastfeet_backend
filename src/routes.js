@@ -9,6 +9,7 @@ import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import RecipientSignatureController from './app/controllers/RecipientSignatureController';
+import PackageController from './app/controllers/PackageController';
 
 // middleware
 import AuthMiddleware from './app/middlewares/auth';
@@ -52,4 +53,9 @@ routes.post(
 routes.put('/signatures/:signature_id', RecipientSignatureController.update);
 routes.delete('/signatures/:signature_id', RecipientSignatureController.delete);
 
+// routes for packages
+routes.get('/packages', PackageController.index);
+routes.post('/packages', PackageController.store);
+routes.put('/packages/:package_id', PackageController.update);
+routes.delete('/packages/:package_id', PackageController.delete);
 export default routes;

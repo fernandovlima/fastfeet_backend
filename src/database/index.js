@@ -6,10 +6,18 @@ import Recipient from '../app/models/Recipient';
 import File from '../app/models/File';
 import Deliveryman from '../app/models/Deliveryman';
 import RecipientSignature from '../app/models/RecipientSignature';
+import Package from '../app/models/Package';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Recipient, File, Deliveryman, RecipientSignature];
+const models = [
+  User,
+  Recipient,
+  File,
+  Deliveryman,
+  RecipientSignature,
+  Package,
+];
 
 class Database {
   constructor() {
