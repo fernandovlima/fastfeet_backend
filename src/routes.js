@@ -37,10 +37,10 @@ routes.put('/recipients/:recipient_id', RecipientController.update);
 routes.post('/files', upload.single('file'), FileController.store);
 
 // routes to deliverymans
-routes.get('/deliverymans', DeliverymanController.index);
-routes.post('/deliverymans', DeliverymanController.store);
-routes.put('/deliverymans/:deliveryman_id', DeliverymanController.update);
-routes.delete('/deliverymans/:deliveryman_id', DeliverymanController.delete);
+routes.get('/deliveryman', DeliverymanController.index);
+routes.post('/deliveryman', DeliverymanController.store);
+routes.put('/deliveryman/:deliveryman_id', DeliverymanController.update);
+routes.delete('/deliveryman/:deliveryman_id', DeliverymanController.delete);
 
 // recipient signatures
 routes.get('/signatures', RecipientSignatureController.index);
