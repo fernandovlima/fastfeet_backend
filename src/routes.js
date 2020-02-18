@@ -8,7 +8,7 @@ import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
-import RecipientSignatureController from './app/controllers/RecipientSignatureController';
+
 import PackageController from './app/controllers/PackageController';
 
 // middleware
@@ -31,6 +31,7 @@ routes.use(AuthMiddleware);
 routes.put('/users', UserController.update);
 
 // recipients
+routes.get('/recipients', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:recipient_id', RecipientController.update);
 
@@ -42,16 +43,6 @@ routes.get('/deliveryman', DeliverymanController.index);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman/:deliveryman_id', DeliverymanController.update);
 routes.delete('/deliveryman/:deliveryman_id', DeliverymanController.delete);
-
-// recipient signatures
-routes.get('/signatures', RecipientSignatureController.index);
-routes.post(
-  '/signatures/:recipient_id',
-  upload.single('signature'),
-  RecipientSignatureController.store
-);
-routes.put('/signatures/:signature_id', RecipientSignatureController.update);
-routes.delete('/signatures/:signature_id', RecipientSignatureController.delete);
 
 // routes for packages
 routes.get('/packages', PackageController.index);

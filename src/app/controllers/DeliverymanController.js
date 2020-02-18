@@ -1,10 +1,20 @@
 import * as Yup from 'yup';
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
     try {
-      const deliverymans = await Deliveryman.findAll();
+      const deliverymans = await Deliveryman.findAll({
+        attributes: ['id', 'name', 'email', 'avatar_id'],
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['name', 'url'],
+          },
+        ],
+      });
 
       return res.json(deliverymans);
     } catch (error) {
@@ -36,12 +46,8 @@ class DeliverymanController {
 
     // create deliveryman
     try {
-      const { name, email, avatar_id } = await Deliveryman.create(req.body);
-      return res.json({
-        name,
-        email,
-        avatar_id,
-      });
+      const deliveryman = await Deliveryman.create(req.body);
+      return res.json(deliveryman);
     } catch (error) {
       return res.json(error);
     }
@@ -59,19 +65,23 @@ class DeliverymanController {
     }
 
     // find if deliveryman exists
-    const deliveryman = await Deliveryman.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
+    const deliveryman = await Deliveryman.findByPk(req.params.deliveryman_id);
 
     if (!deliveryman) {
       return res.status(401).json({ error: 'Deliveryman not exists' });
     }
+    const { email } = req.body;
 
-    const { name, email, avatar_id } = await deliveryman.update(req.body);
+    if (email && email !== deliveryman.email) {
+      const deliverymanExists = await Deliveryman.findOne({ where: { email } });
+      if (deliverymanExists) {
+        return res.status(401).json({ error: 'Deliveryman already exists' });
+      }
+    }
 
-    return res.json({ name, email, avatar_id });
+    const { id, name, avatar_id } = await deliveryman.update(req.body);
+
+    return res.json({ id, name, email, avatar_id });
   }
 
   async delete(req, res) {

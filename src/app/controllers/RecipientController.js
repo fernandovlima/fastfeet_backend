@@ -2,6 +2,19 @@ import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
+  async index(req, res) {
+    try {
+      const recipients = await Recipient.findAll();
+
+      if (!recipients) {
+        return res.status(401).json({ error: 'no recipients created' });
+      }
+      return res.json(recipients);
+    } catch (error) {
+      return res.json(error);
+    }
+  }
+
   async store(req, res) {
     // validation schema
     const schema = Yup.object().shape({
