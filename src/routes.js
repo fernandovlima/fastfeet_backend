@@ -10,6 +10,7 @@ import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import PackageController from './app/controllers/PackageController';
 import PackageStatusController from './app/controllers/PackageStatusController';
+import PackageProblemController from './app/controllers/PackageProblemController';
 
 // middleware
 import AuthMiddleware from './app/middlewares/auth';
@@ -36,6 +37,9 @@ routes.put(
 );
 // signatures
 routes.post('/files/signature', upload.single('file'), FileController.store);
+
+routes.post('/deliveries/:package_id/problems', PackageProblemController.store); // create package problems
+
 // midleware for auth routes
 routes.use(AuthMiddleware);
 
@@ -62,4 +66,12 @@ routes.get('/packages', PackageController.index);
 routes.post('/packages', PackageController.store);
 routes.put('/packages/:package_id', PackageController.update);
 routes.delete('/packages/:package_id', PackageController.delete);
+
+// package problem
+routes.get('/deliveries/problems', PackageProblemController.index); // problems by package
+routes.get('/deliveries/:package_id/problems', PackageProblemController.show); // problems by package
+routes.delete(
+  '/problem/:package_id/cancel-delivery',
+  PackageProblemController.delete
+);
 export default routes;
