@@ -4,7 +4,9 @@ import Package from '../models/Package';
 import PackageProblem from '../models/PackageProblem';
 import Deliveryman from '../models/Deliveryman';
 
-import Mail from '../../lib/Mail';
+import CancellationMail from '../jobs/CancellationMail';
+
+import Queue from '../../lib/Queue';
 
 class PackageProblemController {
   async index(req, res) {
@@ -116,19 +118,9 @@ class PackageProblemController {
       }
     );
 
-    await Mail.sendMail({
-      to: `${packageOk.deliveryman.namel} <${packageOk.deliveryman.email}>`,
-      subject: 'Package Cancelled',
-      template: 'cancellation',
-      context: {
-        deliveryman: packageOk.deliveryman.name,
-        package_id: packageOk.id,
-        product: packageOk.product,
-        canceled_at: packageOk.canceled_at,
-      },
-    });
+    Queue.add(CancellationMail.key, { packageOk });
 
-    return res.status(200).json();
+    return res.status(200).json('Cancelation OK');
   }
 }
 
