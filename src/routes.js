@@ -8,8 +8,8 @@ import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
-
 import PackageController from './app/controllers/PackageController';
+import PackageStatusController from './app/controllers/PackageStatusController';
 
 // middleware
 import AuthMiddleware from './app/middlewares/auth';
@@ -24,6 +24,18 @@ routes.post('/sessions', SessionController.store);
 // user routes
 routes.post('/users', UserController.store);
 
+// deliveryman deliveries
+routes.get('/deliveryman/deliveries', PackageStatusController.index);
+routes.get(
+  '/deliveryman/:deliveryman_id/deliveries',
+  PackageStatusController.show
+);
+routes.put(
+  '/deliveryman/:deliveryman_id/deliveries/:package_id',
+  PackageStatusController.update
+);
+// signatures
+routes.post('/files/signature', upload.single('file'), FileController.store);
 // midleware for auth routes
 routes.use(AuthMiddleware);
 
@@ -36,6 +48,7 @@ routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:recipient_id', RecipientController.update);
 
 // upload files
+routes.get('/files', FileController.index);
 routes.post('/files', upload.single('file'), FileController.store);
 
 // routes to deliverymans

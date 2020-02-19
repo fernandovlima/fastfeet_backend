@@ -114,7 +114,7 @@ class PackageController {
     // find if package exists
     const packageExists = await Package.findOne({
       where: {
-        email: req.body.email,
+        id: req.params.package_id,
       },
     });
 
@@ -122,9 +122,13 @@ class PackageController {
       return res.status(401).json({ error: 'Package not exists' });
     }
 
-    const { name, email, avatar_id } = await packageExists.update(req.body);
+    const {
+      product,
+      recipient_id,
+      deliveryman_id,
+    } = await packageExists.update(req.body);
 
-    return res.json({ name, email, avatar_id });
+    return res.json({ product, recipient_id, deliveryman_id });
   }
 
   async delete(req, res) {
