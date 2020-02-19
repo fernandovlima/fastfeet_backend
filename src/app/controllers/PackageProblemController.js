@@ -4,6 +4,8 @@ import Package from '../models/Package';
 import PackageProblem from '../models/PackageProblem';
 import Deliveryman from '../models/Deliveryman';
 
+import Mail from '../../lib/Mail';
+
 class PackageProblemController {
   async index(req, res) {
     try {
@@ -99,16 +101,32 @@ class PackageProblemController {
     if (packageOk.end_date !== null && packageOk.signature_id !== null) {
       return res.status(400).json('This delivery has been completed');
     }
+
+    if (packageOk.canceled_at !== null) {
+      return res.status(400).json('This package has already been cancelled');
+    }
     packageOk.update(
       {
         canceled_at: new Date(),
       },
       {
         where: {
-          id: packageProblemExists.delivery_id,
+          id: packageProblemExists.package_id,
         },
       }
     );
+
+    await Mail.sendMail({
+      to: `${packageOk.deliveryman.namel} <${packageOk.deliveryman.email}>`,
+      subject: 'Package Cancelled',
+      template: 'cancellation',
+      context: {
+        deliveryman: packageOk.deliveryman.name,
+        package_id: packageOk.id,
+        product: packageOk.product,
+        canceled_at: packageOk.canceled_at,
+      },
+    });
 
     return res.status(200).json();
   }

@@ -85,14 +85,14 @@ class PackageStatusController {
       });
     }
 
-    const { deliveryman_id, delivery_id } = req.params;
+    const { deliveryman_id, package_id } = req.params;
 
     const deliverymanExists = await Deliveryman.findOne({
       where: { id: deliveryman_id },
     });
 
     const deliveryExists = await Package.findOne({
-      where: { id: delivery_id },
+      where: { id: package_id },
     });
 
     if (!deliverymanExists && !deliveryExists) {
@@ -110,7 +110,7 @@ class PackageStatusController {
     }
 
     const deliverymanPackages = await Package.findOne({
-      where: { id: delivery_id, deliveryman_id },
+      where: { id: package_id, deliveryman_id },
     });
 
     if (!deliverymanPackages) {
@@ -131,7 +131,7 @@ class PackageStatusController {
 
     if (
       ordersPickupInDay.length < 5 ||
-      arrayOfIds.includes(Number(delivery_id))
+      arrayOfIds.includes(Number(package_id))
     ) {
       const data = await deliverymanPackages.update(req.body, {
         attributes: [
