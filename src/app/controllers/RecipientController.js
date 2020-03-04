@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
+import Deliveryman from '../models/Deliveryman';
 
 class RecipientController {
   async index(req, res) {

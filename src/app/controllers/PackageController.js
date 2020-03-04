@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Package from '../models/Package';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
@@ -6,6 +7,8 @@ import Deliveryman from '../models/Deliveryman';
 
 class PackageController {
   async index(req, res) {
+    const { product = '' } = req.query;
+
     try {
       const packages = await Package.findAll({
         include: [
@@ -48,6 +51,11 @@ class PackageController {
           'start_date',
           'end_date',
         ],
+        where: {
+          product: {
+            [Op.iLike]: `%${product}%`,
+          },
+        },
       });
 
       return res.json(packages);
