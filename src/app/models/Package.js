@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
+import SequelizePaginate from 'sequelize-paginate';
 
 class Package extends Model {
   static init(sequelize) {
@@ -11,6 +12,15 @@ class Package extends Model {
         canceled_at: Sequelize.DATE,
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
+        status: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            if (this.canceled_at) return 'canceled';
+            if (this.end_date) return 'done';
+            if (this.start_date) return 'progress';
+            return `pendding`;
+          },
+        },
       },
       {
         sequelize,
@@ -35,5 +45,7 @@ class Package extends Model {
     });
   }
 }
+
+SequelizePaginate.paginate(Package);
 
 export default Package;

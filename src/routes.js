@@ -25,6 +25,8 @@ routes.post('/sessions', SessionController.store);
 // user routes
 routes.post('/users', UserController.store);
 
+routes.get('/deliveryman/:deliveryman_id', DeliverymanController.show);
+
 // deliveryman deliveries
 routes.get('/deliveryman/deliveries', PackageStatusController.index);
 routes.get(
@@ -57,6 +59,7 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 // routes to deliverymans
 routes.get('/deliveryman', DeliverymanController.index);
+
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman/:deliveryman_id', DeliverymanController.update);
 routes.delete('/deliveryman/:deliveryman_id', DeliverymanController.delete);
@@ -64,7 +67,7 @@ routes.delete('/deliveryman/:deliveryman_id', DeliverymanController.delete);
 // routes for packages
 routes.get('/packages', PackageController.index);
 routes.post('/packages', PackageController.store);
-routes.put('/packages/:package_id', PackageController.update);
+routes.put('/packages/:package_id/cancel-package', PackageController.update);
 routes.delete('/packages/:package_id', PackageController.delete);
 
 // package problem

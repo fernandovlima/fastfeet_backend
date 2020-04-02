@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
+import SequelizePaginate from 'sequelize-paginate';
 
 class Deliveryman extends Model {
   static init(sequelize) {
@@ -22,4 +23,5 @@ class Deliveryman extends Model {
   }
 }
 
+SequelizePaginate.paginate(Deliveryman);
 export default Deliveryman;

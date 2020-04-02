@@ -7,10 +7,10 @@ import Deliveryman from '../models/Deliveryman';
 
 class PackageController {
   async index(req, res) {
-    const { product = '' } = req.query;
+    const { product = '', page = 1, paginate = 10 } = req.query;
 
     try {
-      const packages = await Package.findAll({
+      const packages = await Package.paginate({
         include: [
           {
             model: Deliveryman,
@@ -42,6 +42,12 @@ class PackageController {
             attributes: ['url', 'path', 'name'],
           },
         ],
+        page,
+        paginate,
+        order: [
+          ['updated_at', 'DESC'],
+          ['id', 'ASC'],
+        ],
         attributes: [
           'id',
           'product',
@@ -50,6 +56,7 @@ class PackageController {
           'canceled_at',
           'start_date',
           'end_date',
+          'status',
         ],
         where: {
           product: {

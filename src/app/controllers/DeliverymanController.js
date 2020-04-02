@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { format } from 'date-fns';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
@@ -15,6 +16,28 @@ class DeliverymanController {
           },
         ],
       });
+
+      return res.json(deliverymans);
+    } catch (error) {
+      return res.json(error);
+    }
+  }
+
+  async show(req, res) {
+    try {
+      const deliverymans = await Deliveryman.findByPk(
+        req.params.deliveryman_id,
+        {
+          attributes: ['id', 'name', 'email', 'avatar_id', 'created_at'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['name', 'url', 'path'],
+            },
+          ],
+        }
+      );
 
       return res.json(deliverymans);
     } catch (error) {
