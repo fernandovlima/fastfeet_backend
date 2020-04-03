@@ -13,6 +13,7 @@ import {
 import Deliveryman from '../models/Deliveryman';
 import Package from '../models/Package';
 import File from '../models/File';
+import Recipient from '../models/Recipient';
 
 class PackageStatusController {
   async index(req, res) {
@@ -29,27 +30,95 @@ class PackageStatusController {
   }
 
   async show(req, res) {
+    const { page = 1, paginate = 10 } = req.query;
     const { deliveryman_id } = req.params;
 
-    const deliverymanExists = await Deliveryman.findByPk({ deliveryman_id });
+    const deliverymanExists = await Deliveryman.findByPk(deliveryman_id);
 
     if (!deliverymanExists) {
       return res.status(401).json({ error: 'Deliveryman does not exist.' });
     }
-    const deliveries = await Package.findAll({
-      where: {
-        end_date: {
-          [Op.ne]: null,
+    try {
+      const packages = await Package.paginate({
+        include: [
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['id', 'name', 'email', 'avatar_id'],
+            include: {
+              model: File,
+              as: 'avatar',
+              attributes: ['name', 'path', 'url'],
+            },
+          },
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'id',
+              'name',
+              'street',
+              'zipcode',
+              'number',
+              'state',
+              'city',
+              'complement',
+            ],
+          },
+          {
+            model: File,
+            as: 'signature',
+            attributes: ['url', 'path', 'name'],
+          },
+        ],
+        page,
+        paginate,
+        order: [
+          ['updated_at', 'DESC'],
+          ['id', 'ASC'],
+        ],
+        attributes: [
+          'id',
+          'product',
+          'deliveryman_id',
+          'recipient_id',
+          'canceled_at',
+          'start_date',
+          'end_date',
+          'status',
+        ],
+        where: {
+          deliveryman_id: {
+            [Op.eq]: deliverymanExists.id,
+          },
+          end_date: {
+            [Op.eq]: null,
+          },
         },
-      },
-      include: [
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['url', 'path', 'name'],
-        },
-      ],
-    });
+      });
+
+      return res.json(packages);
+    } catch (error) {
+      return res.json(error);
+    }
+    // const deliveries = await Package.findAll({
+    //   where: {
+    //     end_date: {
+    //       [Op.ne]: null,
+    //     },
+    //     deliveryman_id: {
+    //       [Op.eq]: deliverymanExists.id,
+    //     },
+    //   },
+    //   include: [
+    //     {
+    //       model: File,
+    //       as: 'signature',
+    //       attributes: ['url', 'path', 'name'],
+    //     },
+    //   ],
+    // });
+    console.log(deliveries);
     return res.json(deliveries);
   }
 
